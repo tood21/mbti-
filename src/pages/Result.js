@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ResultData } from "../assets/data/resultdata";
 
 const Result = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const mbti = searchParams.get("mbti");
+  // 최종적으로 도출한 결과 데이터
+  const [resultData, setResultData] = useState({});
 
+  useEffect(() => {
+    const result = ResultData.find((s) => s.best === mbti);
+    setResultData(result);
+  }, [mbti]);
+
+  console.log(mbti);
   return (
     <Wrapper>
       <Header>예비집사판별기</Header>
@@ -14,15 +24,13 @@ const Result = () => {
         <Title>결과 보기</Title>
         <LogoImage>
           <img
-            src={ResultData[0].image}
+            src={resultData.image}
             width={350}
             height={350}
             className='rounded-circle'
           />
         </LogoImage>
-        <Desc>
-          예비 집사님과 찰떵궁합인 고양이는 {ResultData[0].name}입니다.
-        </Desc>
+        <Desc>예비 집사님과 찰떵궁합인 고양이는 {resultData.name}입니다.</Desc>
         <Button
           style={{ fontFamily: "SimKyungha" }}
           onClick={() => navigate("/")}
